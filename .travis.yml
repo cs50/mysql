@@ -4,18 +4,17 @@ script: docker build . -t cs50/mysql:${TRAVIS_BRANCH/master/latest}
 before_deploy: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 deploy:
   provider: script
-  script: |
-    #!/bin/bash
-    
-    if [[ "$TRAVIS_BRANCH" = "master" ]]; then
-      docker tag cs50/mysql:{latest,5.6}
-      docker push cs50/mysql:5.6
-    fi
-    
-    docker push cs50/mysql:${TRAVIS_BRANCH/master/latest}
+  script: docker push cs50/mysql:${TRAVIS_BRANCH/master/latest}
   on:
     condition: "$TRAVIS_BRANCH =~ ^master$"
     all_branches: true
+after_deploy: |
+  #!/bin/bash
+  
+  if [[ "$TRAVIS_BRANCH" = "master" ]]; then
+    docker tag cs50/mysql:{latest,5.6}
+    docker push cs50/mysql:5.6
+  fi
 notifications:
   slack:
     secure: Zf9UJkv90hP/obZzweQ73HqtvwKZMiQQpGA1NaYiz2QKEmyZODj13mxts6QSpyuoTlm+/ghyfHjt5i9PQt55xt0wBuOnBr0VFxwC2ygwd2RdMeulaOWI1JwOFZuNh+AQ1aNp4oqge+Cmaxh/RRf6mtTaIPG5xIpANM35cQmwba5ri6ub31qYxDJbx6Jn8tIiggvG+fIP+thudtEtbjONy38Jbupje6tddbIUCB9wdlexrUrjLN59x0Hw5FNbxCoKsIZ71Uq8rxeuxzjqJH76aSScY0PNGraywLuuBn6x/4hfgJBA9iQ6V1a2vsY++oA5o2Aeg9JkWqUZJ3pWnk9LWCpOyscBVK5TJmqM06a36UujJfPmIj6BUCcrBA2yHyPC06jt99LRFipYzNpTdP0+s7JWppPZhjmw8CzUkQ3Z6BFvzlez1kOTZrXkMwaeZdaHa6bjjuJtuhaO33FsEZhKlCTMXlavMRyevs2f8ua1SqIFOl57qTNy6Hy8Kvkba7MgOLxpPhVz0yBvXjm2SRHv/32QTAQFlxalR76Q7IL1AKqwSj8r02JTGvfQ0FaP5+5WQXU6bzkQIKY18qmzwlR9xFxFi7o0pD1/hCVGi8A4XYi7flEyCTK0FKZ+PVxWXC1AAJ4kBfHVP4fY29RtDnIJSanAQi2hbB4qY5LeLYmLQgQ=
