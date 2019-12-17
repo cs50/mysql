@@ -4,7 +4,13 @@ script: docker build . -t cs50/mysql:${TRAVIS_BRANCH/master/latest}
 before_deploy: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 deploy:
   provider: script
-  script: docker push cs50/mysql:${TRAVIS_BRANCH/master/latest}
+  script: |
+    if [[ "$TRAVIS_BRANCH" = "master" ]]; then
+      docker tag cs50/mysql:{latest,3.6}
+      docker push cs50/mysql:3.6
+    fi
+    
+    docker push cs50/mysql:${TRAVIS_BRANCH/master/latest}
   on:
     condition: "$TRAVIS_BRANCH =~ ^master$"
     all_branches: true
