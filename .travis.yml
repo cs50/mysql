@@ -5,6 +5,8 @@ before_deploy: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 deploy:
   provider: script
   script: |
+    #!/bin/bash
+    
     if [[ "$TRAVIS_BRANCH" = "master" ]]; then
       docker tag cs50/mysql:{latest,3.6}
       docker push cs50/mysql:3.6
