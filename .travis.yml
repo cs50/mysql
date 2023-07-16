@@ -6,7 +6,6 @@ deploy:
   provider: script
   script: docker push cs50/mysql:${TRAVIS_BRANCH/master/latest}
   on:
-    condition: "$TRAVIS_BRANCH =~ ^master$"
     all_branches: true
 after_deploy: |
   #!/bin/bash
