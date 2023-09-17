@@ -53,4 +53,9 @@ jobs:
           docker manifest create cs50/mysql:latest \
           --amend cs50/mysql:amd64 \
           --amend cs50/mysql:arm64
+          docker manifest create cs50/mysql:8 \
+          --amend cs50/mysql:amd64 \
+          --amend cs50/mysql:arm64
           docker manifest push cs50/mysql:latest
+          docker manifest push cs50/mysql:8
+
